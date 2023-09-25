@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import { getUsers, getUserById, createUser } from '../controllers/users';
 
-const router = Router();
+const userRouter = Router();
 
-router.get('/', getUsers);
+// userRouter.use(express.json());
 
-router.get('/:userId', getUserById);
+userRouter.get('/', getUsers);
 
-router.post('/', createUser);
+userRouter.get('/:userId', getUserById);
 
-export default router;
+userRouter.post('/', createUser);
+
+export default userRouter;
