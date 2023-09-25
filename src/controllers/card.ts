@@ -23,3 +23,27 @@ export const createCard = (req: Request, res: Response) => {
     .then((cardData) => res.send({ data: cardData }))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
+
+export const addLike = (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  card.findByIdAndUpdate(
+    id,
+    { $addToSet: { likes: req.body.user._id } },
+    { new: true },
+  )
+    .then((cardData) => res.send({ data: cardData }))
+    .catch((err) => res.status(500).send({ message: err.message }));
+};
+
+export const deleteLike = (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  card.findByIdAndUpdate(
+    id,
+    { $pull: { likes: req.body.user._id } },
+    { new: true },
+  )
+    .then((cardData) => res.send({ data: cardData }))
+    .catch((err) => res.status(500).send({ message: err.message }));
+};
