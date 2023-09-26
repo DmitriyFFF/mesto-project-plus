@@ -13,7 +13,7 @@ import {
 export const getUsers = (req: Request, res: Response) => {
   user.find({})
     .then((users) => res.status(SUCCESS).send({ data: users }))
-    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' }));
+    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send('Внутренняя ошибка сервера'));
 };
 
 export const getUserById = (req: Request, res: Response) => {
@@ -24,10 +24,10 @@ export const getUserById = (req: Request, res: Response) => {
     .catch((err) => {
       if (err.message === 'Not Found') {
         res.status(NOT_FOUND).send('Запрашиваемый пользователь не найден');
-      } else if (mongoose.Error.CastError) {
+      } else if (err instanceof mongoose.Error.CastError) {
         res.status(BAD_REQUEST).send('Переданы не валидные данные');
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
+        res.status(INTERNAL_SERVER_ERROR).send('Внутренняя ошибка сервера');
       }
     });
 };
@@ -38,10 +38,10 @@ export const createUser = (req: Request, res: Response) => {
   user.create({ name, about, avatar })
     .then((userData) => res.status(CREATED).send({ data: userData }))
     .catch((err) => {
-      if (mongoose.Error.ValidationError) {
+      if (err instanceof mongoose.Error.ValidationError) {
         res.status(BAD_REQUEST).send('Переданы не валидные данные');
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
+        res.status(INTERNAL_SERVER_ERROR).send('Внутренняя ошибка сервера');
       }
     });
 };
@@ -56,10 +56,10 @@ export const updateProfile = (req: Request, res: Response) => {
     .catch((err) => {
       if (err.message === 'Not Found') {
         res.status(NOT_FOUND).send('Запрашиваемый пользователь не найден');
-      } else if (mongoose.Error.ValidationError) {
+      } else if (err instanceof mongoose.Error.ValidationError) {
         res.status(BAD_REQUEST).send('Переданы не валидные данные');
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
+        res.status(INTERNAL_SERVER_ERROR).send('Внутренняя ошибка сервера');
       }
     });
 };
@@ -74,10 +74,10 @@ export const updateAvatar = (req: Request, res: Response) => {
     .catch((err) => {
       if (err.message === 'Not Found') {
         res.status(NOT_FOUND).send('Запрашиваемый пользователь не найден');
-      } else if (mongoose.Error.ValidationError) {
+      } else if (err instanceof mongoose.Error.ValidationError) {
         res.status(BAD_REQUEST).send('Переданы не валидные данные');
       } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
+        res.status(INTERNAL_SERVER_ERROR).send('Внутренняя ошибка сервера');
       }
     });
 };
