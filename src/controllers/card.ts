@@ -1,7 +1,9 @@
 /* eslint-disable no-unused-vars */
+import mongoose from 'mongoose';
 import { Request, Response } from 'express';
 import card from '../models/card';
 import {
+  BAD_REQUEST,
   CREATED,
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
@@ -18,14 +20,17 @@ export const deleteCard = (req: Request, res: Response) => {
   const { id } = req.params;
 
   card.findByIdAndDelete(id)
-    .then((cardData) => {
-      if (!cardData) {
-        res.status(NOT_FOUND).send({ message: 'Запрашиваемые данные не найдены' });
+    .orFail(new Error('NotFound'))
+    .then((cardData) => res.status(SUCCESS).send({ data: cardData }))
+    .catch((err) => {
+      if (err.message === 'Not Found') {
+        res.status(NOT_FOUND).send('Запрашиваемые данные не найдены');
+      } else if (mongoose.Error.CastError) {
+        res.status(BAD_REQUEST).send('Переданы не валидные данные');
       } else {
-        res.status(SUCCESS).send({ data: cardData });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
       }
-    })
-    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' }));
+    });
 };
 
 export const createCard = (req: Request, res: Response) => {
@@ -34,7 +39,13 @@ export const createCard = (req: Request, res: Response) => {
 
   card.create({ name, link, owner })
     .then((cardData) => res.status(CREATED).send({ data: cardData }))
-    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' }));
+    .catch((err) => {
+      if (mongoose.Error.ValidationError) {
+        res.status(BAD_REQUEST).send('Переданы не валидные данные');
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
+      }
+    });
 };
 
 export const addLike = (req: Request, res: Response) => {
@@ -45,14 +56,17 @@ export const addLike = (req: Request, res: Response) => {
     { $addToSet: { likes: req.body.user._id } },
     { new: true },
   )
-    .then((cardData) => {
-      if (!cardData) {
-        res.status(NOT_FOUND).send({ message: 'Запрашиваемые данные не найдены' });
+    .orFail(new Error('NotFound'))
+    .then((cardData) => res.status(SUCCESS).send({ data: cardData }))
+    .catch((err) => {
+      if (err.message === 'Not Found') {
+        res.status(NOT_FOUND).send('Запрашиваемые данные не найдены');
+      } else if (mongoose.Error.CastError) {
+        res.status(BAD_REQUEST).send('Переданы не валидные данные');
       } else {
-        res.status(SUCCESS).send({ data: cardData });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
       }
-    })
-    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' }));
+    });
 };
 
 export const deleteLike = (req: Request, res: Response) => {
@@ -63,12 +77,15 @@ export const deleteLike = (req: Request, res: Response) => {
     { $pull: { likes: req.body.user._id } },
     { new: true },
   )
-    .then((cardData) => {
-      if (!cardData) {
-        res.status(NOT_FOUND).send({ message: 'Запрашиваемые данные не найдены' });
+    .orFail(new Error('NotFound'))
+    .then((cardData) => res.status(SUCCESS).send({ data: cardData }))
+    .catch((err) => {
+      if (err.message === 'Not Found') {
+        res.status(NOT_FOUND).send('Запрашиваемые данные не найдены');
+      } else if (mongoose.Error.CastError) {
+        res.status(BAD_REQUEST).send('Переданы не валидные данные');
       } else {
-        res.status(SUCCESS).send({ data: cardData });
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
       }
-    })
-    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' }));
+    });
 };
