@@ -25,7 +25,7 @@ app.use('/users', userRouter);
 
 app.use('/cards', cardRouter);
 
-app.use((req, res, next) => {
+app.use('*', (req, res, next) => {
   res.status(NOT_FOUND);
   next(new Error('Страница не найдена'));
 });
