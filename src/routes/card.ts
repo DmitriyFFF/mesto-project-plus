@@ -13,10 +13,10 @@ cardRouter.get('/', getCards);
 
 cardRouter.post('/', createCard);
 
-cardRouter.delete('/:cardId', deleteCard);
+cardRouter.delete('/:id', deleteCard);
 
-cardRouter.put('/:cardId/likes', addLike);
+cardRouter.put('/:id/likes', addLike);
 
-cardRouter.delete('/:cardId/likes', deleteLike);
+cardRouter.delete('/:id/likes', deleteLike);
 
 export default cardRouter;
