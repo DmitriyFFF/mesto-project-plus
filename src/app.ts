@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import userRouter from './routes/users';
 import cardRouter from './routes/card';
+import { NOT_FOUND } from './constants/statusCodes';
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
@@ -23,6 +24,11 @@ app.use((req, res, next) => {
 app.use('/users', userRouter);
 
 app.use('/cards', cardRouter);
+
+app.use((req, res, next) => {
+  res.status(NOT_FOUND);
+  next(new Error('Страница не найдена'));
+});
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
