@@ -2,7 +2,7 @@ import { Router } from 'express';
 import {
   getUsers,
   getUserById,
-  createUser,
+  // createUser,
   updateProfile,
   updateAvatar,
 } from '../controllers/users';
@@ -13,7 +13,7 @@ userRouter.get('/', getUsers);
 
 userRouter.get('/:id', getUserById);
 
-userRouter.post('/', createUser);
+// userRouter.post('/', createUser);
 
 userRouter.patch('/me', updateProfile);
 

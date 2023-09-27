@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import user from '../models/user';
 import {
@@ -92,5 +93,18 @@ export const updateAvatar = (req: Request, res: Response) => {
       } else {
         res.status(INTERNAL_SERVER_ERROR).send('Внутренняя ошибка сервера');
       }
+    });
+};
+
+export const login = (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  return user.findUserByCredentials(email, password)
+    .then((userData) => {
+      const token = jwt.sign({ _id: userData._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.send({ token });
+    })
+    .catch((err) => {
+      res.status(401).send({ message: err.message });
     });
 };
