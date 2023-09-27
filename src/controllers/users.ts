@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import user from '../models/user';
 import {
@@ -33,9 +34,21 @@ export const getUserById = (req: Request, res: Response) => {
 };
 
 export const createUser = (req: Request, res: Response) => {
-  const { name, about, avatar } = req.body;
+  const {
+    name,
+    about,
+    avatar,
+    email,
+  } = req.body;
 
-  user.create({ name, about, avatar })
+  bcrypt.hash(req.body.password, 10)
+    .then((hash: string) => user.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
     .then((userData) => res.status(CREATED).send({ data: userData }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
