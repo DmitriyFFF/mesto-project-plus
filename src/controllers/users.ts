@@ -108,3 +108,18 @@ export const login = (req: Request, res: Response) => {
       res.status(401).send({ message: err.message });
     });
 };
+
+export const getCurUser = (req: Request, res: Response) => {
+  // const userId = req.user?._id;
+  user.findById(req.body.user?._id).orFail(new Error('Not Found'))
+    .then((userData) => res.status(SUCCESS).send({ data: userData }))
+    .catch((err) => {
+      if (err.message === 'Not Found') {
+        res.status(NOT_FOUND).send('Запрашиваемый пользователь не найден');
+      } else if (err instanceof mongoose.Error.CastError) {
+        res.status(BAD_REQUEST).send('Переданы не валидные данные');
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send('Внутренняя ошибка сервера');
+      }
+    });
+};

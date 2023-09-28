@@ -4,6 +4,7 @@ import userRouter from './routes/users';
 import cardRouter from './routes/card';
 import { NOT_FOUND } from './constants/statusCodes';
 import { createUser, login } from './controllers/users';
+import auth from './middlewares/auth';
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
@@ -17,13 +18,15 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.use((req, res, next) => {
-  req.body.user = {
-    _id: '65113f33f45173634569739c',
-  };
+app.use(auth);
 
-  next();
-});
+// app.use((req, res, next) => {
+//   req.body.user = {
+//     _id: '65113f33f45173634569739c',
+//   };
+
+//   next();
+// });
 
 app.use('/users', userRouter);
 
