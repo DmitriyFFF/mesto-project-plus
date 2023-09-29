@@ -5,6 +5,7 @@ import cardRouter from './routes/card';
 import { NOT_FOUND } from './constants/statusCodes';
 import { createUser, login } from './controllers/users';
 import auth from './middlewares/auth';
+import { requestLogger, errorLogger } from './middlewares/logger';
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
@@ -14,6 +15,8 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(requestLogger);
 
 app.post('/signin', login);
 app.post('/signup', createUser);
@@ -35,6 +38,8 @@ app.use('/cards', cardRouter);
 app.use('*', (req, res) => {
   res.status(NOT_FOUND).send('Страница не найдена');
 });
+
+app.use(errorLogger);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
