@@ -1,14 +1,15 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
+import { IUser } from '../utils/types';
 
-interface IUser {
-  name: string;
-  about: string;
-  avatar: string;
-  email: string;
-  password: string;
-}
+// interface IUser {
+//   name: string;
+//   about: string;
+//   avatar: string;
+//   email: string;
+//   password: string;
+// }
 
 interface UserModel extends mongoose.Model<IUser> {
   // eslint-disable-next-line no-unused-vars

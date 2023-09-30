@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
+import { ICard } from '../utils/types';
 
-interface ICard {
-  name: string;
-  link: string;
-  owner: mongoose.Types.ObjectId;
-  likes: mongoose.Types.ObjectId[];
-  createdAt: Date;
-}
+// interface ICard {
+//   name: string;
+//   link: string;
+//   owner: mongoose.Types.ObjectId;
+//   likes: mongoose.Types.ObjectId[];
+//   createdAt: Date;
+// }
 
 const cardSchema = new mongoose.Schema<ICard>({
   name: {

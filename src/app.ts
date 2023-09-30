@@ -2,9 +2,10 @@ import express from 'express';
 import mongoose from 'mongoose';
 import userRouter from './routes/users';
 import cardRouter from './routes/card';
-import { NOT_FOUND } from './constants/statusCodes';
+import { NOT_FOUND } from './utils/constants';
 import { createUser, login } from './controllers/users';
 import auth from './middlewares/auth';
+import errorHandler from './middlewares/error';
 import { requestLogger, errorLogger } from './middlewares/logger';
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
@@ -23,14 +24,6 @@ app.post('/signup', createUser);
 
 app.use(auth);
 
-// app.use((req, res, next) => {
-//   req.body.user = {
-//     _id: '65113f33f45173634569739c',
-//   };
-
-//   next();
-// });
-
 app.use('/users', userRouter);
 
 app.use('/cards', cardRouter);
@@ -40,6 +33,8 @@ app.use('*', (req, res) => {
 });
 
 app.use(errorLogger);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

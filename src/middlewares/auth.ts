@@ -1,9 +1,10 @@
-import { NextFunction, Request, Response } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import { NextFunction, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { SessionRequest } from '../utils/types';
 
-interface SessionRequest extends Request {
-  user?: string | JwtPayload;
-}
+// interface SessionRequest extends Request {
+//   user?: string | JwtPayload;
+// }
 
 const extractBearerToken = (header: string) => header.replace('Bearer', '');
 
