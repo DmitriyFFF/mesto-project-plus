@@ -2,14 +2,7 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import { IUser } from '../utils/types';
-
-// interface IUser {
-//   name: string;
-//   about: string;
-//   avatar: string;
-//   email: string;
-//   password: string;
-// }
+import { urlRegExp } from '../utils/constants';
 
 interface UserModel extends mongoose.Model<IUser> {
   // eslint-disable-next-line no-unused-vars
@@ -33,6 +26,10 @@ const userSchema = new mongoose.Schema<IUser, UserModel>({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: {
+      validator: (v: string) => urlRegExp.test(v),
+      message: 'Некорректный формат ссылки',
+    },
   },
   email: {
     type: String,

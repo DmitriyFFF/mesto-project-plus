@@ -1,37 +1,25 @@
-/* eslint-disable no-unused-vars */
-import mongoose from 'mongoose';
 import { NextFunction, Request, Response } from 'express';
 import card from '../models/card';
 import {
-  BAD_REQUEST,
   CREATED,
-  INTERNAL_SERVER_ERROR,
   NOT_FOUND,
   SUCCESS,
 } from '../utils/constants';
+import ErrorApi from '../utils/errorApi';
 
-export const getCards = (req: Request, res: Response) => {
+export const getCards = (req: Request, res: Response, next: NextFunction) => {
   card.find({})
     .then((cards) => res.status(SUCCESS).send({ data: cards }))
-    .catch((err) => res.status(INTERNAL_SERVER_ERROR).send('Внутренняя ошибка сервера'));
+    .catch(next);
 };
 
 export const deleteCard = (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   card.findByIdAndDelete(id)
-    .orFail(new Error('NotFound'))
+    .orFail(new ErrorApi(NOT_FOUND, 'Not Found'))
     .then((cardData) => res.status(SUCCESS).send({ data: cardData }))
     .catch(next);
-  // .catch((err) => {
-  //   if (err.message === 'Not Found') {
-  //     res.status(NOT_FOUND).send('Запрашиваемые данные не найдены');
-  //   } else if (err instanceof mongoose.Error.CastError) {
-  //     res.status(BAD_REQUEST).send('Переданы не валидные данные');
-  //   } else {
-  //     res.status(INTERNAL_SERVER_ERROR).send('Внутренняя ошибка сервера');
-  //   }
-  // });
 };
 
 export const createCard = (req: Request, res: Response, next: NextFunction) => {
@@ -41,13 +29,6 @@ export const createCard = (req: Request, res: Response, next: NextFunction) => {
   card.create({ name, link, owner })
     .then((cardData) => res.status(CREATED).send({ data: cardData }))
     .catch(next);
-  // .catch((err) => {
-  //   if (err instanceof mongoose.Error.ValidationError) {
-  //     res.status(BAD_REQUEST).send('Переданы не валидные данные');
-  //   } else {
-  //     res.status(INTERNAL_SERVER_ERROR).send('Внутренняя ошибка сервера');
-  //   }
-  // });
 };
 
 export const addLike = (req: Request, res: Response, next: NextFunction) => {
@@ -58,18 +39,9 @@ export const addLike = (req: Request, res: Response, next: NextFunction) => {
     { $addToSet: { likes: req.body.user._id } },
     { new: true },
   )
-    .orFail(new Error('NotFound'))
+    .orFail(new ErrorApi(NOT_FOUND, 'Not Found'))
     .then((cardData) => res.status(SUCCESS).send({ data: cardData }))
     .catch(next);
-  // .catch((err) => {
-  //   if (err.message === 'Not Found') {
-  //     res.status(NOT_FOUND).send('Запрашиваемые данные не найдены');
-  //   } else if (err instanceof mongoose.Error.CastError) {
-  //     res.status(BAD_REQUEST).send('Переданы не валидные данные');
-  //   } else {
-  //     res.status(INTERNAL_SERVER_ERROR).send('Внутренняя ошибка сервера');
-  //   }
-  // });
 };
 
 export const deleteLike = (req: Request, res: Response, next: NextFunction) => {
@@ -80,16 +52,7 @@ export const deleteLike = (req: Request, res: Response, next: NextFunction) => {
     { $pull: { likes: req.body.user._id } },
     { new: true },
   )
-    .orFail(new Error('NotFound'))
+    .orFail(new ErrorApi(NOT_FOUND, 'Not Found'))
     .then((cardData) => res.status(SUCCESS).send({ data: cardData }))
     .catch(next);
-  // .catch((err) => {
-  //   if (err.message === 'Not Found') {
-  //     res.status(NOT_FOUND).send('Запрашиваемые данные не найдены');
-  //   } else if (err instanceof mongoose.Error.CastError) {
-  //     res.status(BAD_REQUEST).send('Переданы не валидные данные');
-  //   } else {
-  //     res.status(INTERNAL_SERVER_ERROR).send('Внутренняя ошибка сервера');
-  //   }
-  // });
 };

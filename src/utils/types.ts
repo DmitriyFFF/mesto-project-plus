@@ -21,8 +21,3 @@ export interface ICard {
 export interface SessionRequest extends Request {
   user?: string | JwtPayload;
 }
-
-// export interface IError {
-//   message: string;
-//   statusCode: number;
-// }

@@ -2,10 +2,6 @@ import { NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { SessionRequest } from '../utils/types';
 
-// interface SessionRequest extends Request {
-//   user?: string | JwtPayload;
-// }
-
 const extractBearerToken = (header: string) => header.replace('Bearer', '');
 
 const handleAuthError = (res: Response) => {
