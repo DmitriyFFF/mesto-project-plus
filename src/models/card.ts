@@ -1,12 +1,6 @@
 import mongoose from 'mongoose';
-
-interface ICard {
-  name: string;
-  link: string;
-  owner: mongoose.Types.ObjectId;
-  likes: mongoose.Types.ObjectId[];
-  createdAt: Date;
-}
+import { ICard } from '../utils/types';
+import { urlRegExp } from '../utils/constants';
 
 const cardSchema = new mongoose.Schema<ICard>({
   name: {
@@ -18,6 +12,10 @@ const cardSchema = new mongoose.Schema<ICard>({
   link: {
     type: String,
     required: true,
+    validate: {
+      validator: (v: string) => urlRegExp.test(v),
+      message: 'Некорректный формат ссылки',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
